@@ -1,4 +1,16 @@
 import { RawCoinInfo } from "./types";
+import { 
+  TESTNET_BNB_COIN_TYPE,
+  TESTNET_USDT_COIN_TYPE,
+  TESTNET_XBTC_COIN_TYPE,
+  TESTNET_WBTC_COIN_TYPE,
+  TESTNET_BTC_COIN_TYPE,
+  TESTNET_ETH_COIN_TYPE,
+  TESTNET_DAI_COIN_TYPE,
+  TESTNET_USDC_COIN_TYPE,
+} from "../constants";
+
+import { TESTNET_SWAP_PACKAGE_OBJECT_ID } from "../config";
 
 export const REQUESTS_MAINNET: RawCoinInfo[] = [
 
@@ -71,15 +83,16 @@ export const REQUESTS_TESTNET: RawCoinInfo[] = [
       "logo_url": "https://raw.githubusercontent.com/hippospace/aptos-coin-list/main/icons/USDT.svg",
       "project_url": "",
       "token_type": {
-        "type": "0x985c26f5edba256380648d4ad84b202094a4ade3::usdt::USDT",
-        "account_address": "0x985c26f5edba256380648d4ad84b202094a4ade3",
-        "module_name": "usdt",
+        "type": TESTNET_USDT_COIN_TYPE,
+        "account_address": TESTNET_SWAP_PACKAGE_OBJECT_ID,
+        "module_name": "coins",
         "struct_name": "USDT"
       },
       "extensions": {
         "data": []
       }
     },
+
     {
       "name": "XBTC",
       "symbol": "XBTC",
@@ -89,9 +102,9 @@ export const REQUESTS_TESTNET: RawCoinInfo[] = [
       "logo_url": "https://coming-website.s3.us-east-2.amazonaws.com/icon_xbtc_30.png",
       "project_url": "https://github.com/OmniBTC/OmniBridge",
       "token_type": {
-        "type": "0x985c26f5edba256380648d4ad84b202094a4ade3::xbtc::XBTC",
-        "account_address": "0x985c26f5edba256380648d4ad84b202094a4ade3",
-        "module_name": "xbtc",
+        "type": TESTNET_XBTC_COIN_TYPE,
+        "account_address": TESTNET_SWAP_PACKAGE_OBJECT_ID,
+        "module_name": "coins",
         "struct_name": "XBTC"
       },
       "extensions": {
@@ -116,8 +129,9 @@ export const REQUESTS_TESTNET: RawCoinInfo[] = [
         "data": []
       }
     },
+
     {
-      "name": "BTC",
+      "name": "Bitcoin",
       "symbol": "BTC",
       "official_symbol": "BTC",
       "coingecko_id": "",
@@ -125,15 +139,35 @@ export const REQUESTS_TESTNET: RawCoinInfo[] = [
       "logo_url": "https://coming-website.s3.us-east-2.amazonaws.com/icon_xbtc_30.png",
       "project_url": "https://github.com/OmniBTC/OmniBridge",
       "token_type": {
-        "type": "0xed67ff7ca06c2af6353fcecc69e312a0588dbab1::btc::BTC",
-        "account_address": "0xed67ff7ca06c2af6353fcecc69e312a0588dbab1",
-        "module_name": "btc",
+        "type": TESTNET_BTC_COIN_TYPE,
+        "account_address": TESTNET_SWAP_PACKAGE_OBJECT_ID,
+        "module_name": "coins",
         "struct_name": "BTC"
       },
       "extensions": {
         "data": []
       }
     },
+
+    {
+      "name": "Wrap Bitcoin",
+      "symbol": "WBTC",
+      "official_symbol": "WBTC",
+      "coingecko_id": "",
+      "decimals": 8,
+      "logo_url": "https://coming-website.s3.us-east-2.amazonaws.com/icon_xbtc_30.png",
+      "project_url": "https://github.com/OmniBTC/OmniBridge",
+      "token_type": {
+        "type": TESTNET_WBTC_COIN_TYPE,
+        "account_address": TESTNET_SWAP_PACKAGE_OBJECT_ID,
+        "module_name": "coins",
+        "struct_name": "WBTC"
+      },
+      "extensions": {
+        "data": []
+      }
+    },
+
     {
       "name": "Binance Coin",
       "symbol": "BNB",
@@ -143,9 +177,9 @@ export const REQUESTS_TESTNET: RawCoinInfo[] = [
       "logo_url": "https://raw.githubusercontent.com/hippospace/aptos-coin-list/main/icons/BNB.svg",
       "project_url": "",
       "token_type": {
-        "type": "0xed67ff7ca06c2af6353fcecc69e312a0588dbab1::bnb::BNB",
-        "account_address": "0xed67ff7ca06c2af6353fcecc69e312a0588dbab1",
-        "module_name": "bnb",
+        "type": TESTNET_BNB_COIN_TYPE,
+        "account_address": TESTNET_SWAP_PACKAGE_OBJECT_ID,
+        "module_name": "coins",
         "struct_name": "BNB"
       },
       "extensions": {
@@ -162,10 +196,48 @@ export const REQUESTS_TESTNET: RawCoinInfo[] = [
       "logo_url": "https://raw.githubusercontent.com/hippospace/aptos-coin-list/main/icons/WETH.svg",
       "project_url": "",
       "token_type": {
-        "type": "0xed67ff7ca06c2af6353fcecc69e312a0588dbab1::eth::ETH",
-        "account_address": "0xed67ff7ca06c2af6353fcecc69e312a0588dbab1",
-        "module_name": "eth",
+        "type": TESTNET_ETH_COIN_TYPE,
+        "account_address": TESTNET_SWAP_PACKAGE_OBJECT_ID,
+        "module_name": "coins",
         "struct_name": "ETH"
+      },
+      "extensions": {
+        "data": []
+      }
+    },
+
+    {
+      "name": "Dai",
+      "symbol": "DAI",
+      "official_symbol": "DAI",
+      "coingecko_id": "dai",
+      "decimals": 8,
+      "logo_url": "https://raw.githubusercontent.com/hippospace/aptos-coin-list/main/icons/DAI.svg",
+      "project_url": "",
+      "token_type": {
+        "type": TESTNET_DAI_COIN_TYPE,
+        "account_address": TESTNET_SWAP_PACKAGE_OBJECT_ID,
+        "module_name": "coins",
+        "struct_name": "DAI"
+      },
+      "extensions": {
+        "data": []
+      }
+    },
+
+    {
+      "name": "USD Coin",
+      "symbol": "USDC",
+      "official_symbol": "USDC",
+      "coingecko_id": "usd-coin",
+      "decimals": 8,
+      "logo_url": "https://raw.githubusercontent.com/hippospace/aptos-coin-list/main/icons/USDC.svg",
+      "project_url": "",
+      "token_type": {
+        "type": TESTNET_USDC_COIN_TYPE,
+        "account_address": TESTNET_SWAP_PACKAGE_OBJECT_ID,
+        "module_name": "coins",
+        "struct_name": "USDC"
       },
       "extensions": {
         "data": []

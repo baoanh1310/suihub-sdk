@@ -1,40 +1,46 @@
 //import {  Network  } from '@mysten/sui.js';
 
 export class NetworkConfiguration {
-    constructor(
-      public name: string,
-      public fullNodeUrl: string,
-      public packageObjectId: string,
-      public globalId: string,
-      public poolsDynamicId: string,
-      public faucetPackageId:string,
-      public faucetObjectId:string,
-      public isMainNet = false
-    ) {}
-  }
-  
-  export const MAINNET_CONFIG = new NetworkConfiguration(
-    'mainnet',
-    'https://fullnode.mainnet.sui.io:443',
-    '0x1f0d4d3ca884a1a6958fe5ba9dc6d8003d9f7d76',
-    '0x92131c160fa0f1b95190a3a7cbfa32d0149ab00f',
-    '0x19465f7b8008aa1443269808840856a3c8b2c119',
-    "",
-    ""
-  );
-  
-  export const TESTNET_CONFIG = new NetworkConfiguration(
-    'testnet',
-     'https://fullnode.testnet.sui.io:443',
-    '0xc648bfe0d87c25e0436d720ba8f296339bdba5c3',
-    '0x254cf7b848688aa86a8eb69677bbe2e4c46ecf50',
-    '0x81c0cfc53769aaaacee87b4dd8e827e7a86afb8c',
-    "0x985c26f5edba256380648d4ad84b202094a4ade3",
-    "0x50ed67cc1d39a574301fa8d71a47419e9b297bab"
-  );
+  constructor(
+    public name: string,
+    public fullNodeUrl: string,
+    public packageObjectId: string,
+    public globalId: string,
+    public poolsDynamicId: string,
+    public faucetPackageId:string,
+    public faucetObjectId:string,
+    public isMainNet = false
+  ) {}
+}
 
-  export const CONFIGS = {
-    mainnet: MAINNET_CONFIG,
-    testnet: TESTNET_CONFIG
-  };
+export const MAINNET_CONFIG = new NetworkConfiguration(
+  'mainnet',
+  'https://fullnode.mainnet.sui.io:443',
+  '0x1f0d4d3ca884a1a6958fe5ba9dc6d8003d9f7d76',
+  '0x92131c160fa0f1b95190a3a7cbfa32d0149ab00f',
+  '0x19465f7b8008aa1443269808840856a3c8b2c119',
+  "",
+  ""
+);
+
+export const TESTNET_RPC_URL = 'https://fullnode.testnet.sui.io:443';
+export const TESTNET_SWAP_PACKAGE_OBJECT_ID = '0x0235d33eb15185af711494de9ab03f9e8da4333a';
+export const TESTNET_SWAP_GLOBAL_OBJECT_ID = '0x090124d79389067b98a3249fcd27164c0e8a8fa3';
+export const TESTNET_TESTCOIN_PACKAGE_OBJECT_ID = '0xdd3fdee16e84f0e3800c2bb123c63ab7912e8c1f';
+export const TESTNET_TESTCOIN_GLOBAL_OBJECT_ID = '0xbe372bd76e86780f78d94ee127c0330cadfb273c';
+
+export const TESTNET_CONFIG = new NetworkConfiguration(
+  'testnet',
+  TESTNET_RPC_URL,
+  TESTNET_SWAP_PACKAGE_OBJECT_ID,
+  TESTNET_SWAP_GLOBAL_OBJECT_ID,
+  '',
+  TESTNET_TESTCOIN_PACKAGE_OBJECT_ID,
+  TESTNET_TESTCOIN_GLOBAL_OBJECT_ID,
+);
+
+export const CONFIGS = {
+  mainnet: MAINNET_CONFIG,
+  testnet: TESTNET_CONFIG
+};
   
