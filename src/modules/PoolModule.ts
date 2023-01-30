@@ -67,7 +67,7 @@ export class PoolModule implements IModule {
         })
 
         if(!pool) {
-          return Promise.reject();
+          Promise.reject();
         }
         
         const moveObject = await this._sdk.jsonRpcProvider.getObject(pool!.pool_addr);
@@ -75,7 +75,7 @@ export class PoolModule implements IModule {
         const id = getObjectId(moveObject);
         const fields = getObjectFields(moveObject)!['value']!['fields'];
         if (!fields) {
-          return Promise.reject();
+          Promise.reject();
         }
         const lpSupply = fields?.['lp_supply'];
         const poolInfo: PoolInfo = {
