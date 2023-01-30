@@ -65,13 +65,17 @@ export class PoolModule implements IModule {
         const pool:Pool | undefined = poolList.find(pool => {
             return pool.pool_type.includes(coinXType) && pool.pool_type.includes(coinYType);
         })
+
+        if(!pool) {
+          return Promise.reject();
+        }
         
         const moveObject = await this._sdk.jsonRpcProvider.getObject(pool!.pool_addr);
 
         const id = getObjectId(moveObject);
         const fields = getObjectFields(moveObject)!['value']!['fields'];
         if (!fields) {
-          Promise.reject();
+          return Promise.reject();
         }
         const lpSupply = fields?.['lp_supply'];
         const poolInfo: PoolInfo = {

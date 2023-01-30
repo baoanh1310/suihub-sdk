@@ -1,6 +1,6 @@
 import { IModule } from '../interfaces/IModule'
 import { SDK } from '../sdk';
-import { REQUESTS_MAINNET,REQUESTS_TESTNET, RawCoinInfo} from '../coins'
+import { REQUESTS_MAINNET, REQUESTS_TESTNET, REQUESTS_DEVNET, RawCoinInfo} from '../coins'
 
 export class CoinListModule implements IModule {
     protected _sdk: SDK;
@@ -11,7 +11,20 @@ export class CoinListModule implements IModule {
     
     constructor(sdk: SDK) {
       this._sdk = sdk;
-      this.coinList = sdk.networkOptions.isMainNet ? REQUESTS_MAINNET: REQUESTS_TESTNET;
+      switch (sdk.networkOptions.chainId) {
+        case 0:
+          this.coinList = REQUESTS_DEVNET;
+          break;
+        case 1:
+          this.coinList = REQUESTS_TESTNET;
+          break;
+        case 2:
+          this.coinList = REQUESTS_MAINNET;
+          break;
+        default:
+          this.coinList = REQUESTS_TESTNET;
+          break;
+      }
       this.fullnameToCoinInfo = {};
       this.symbolToCoinInfo = {};
       this.typeToCoinInfo = {};
