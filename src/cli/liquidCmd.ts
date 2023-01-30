@@ -6,12 +6,26 @@ import { CreateAddLiquidTXPayloadParams,CreateRemoveLiquidTXPayloadParams } from
 import { addHexPrefix } from '../utils/hex';
 import { randomInt } from 'crypto';
 
+import { 
+    TESTNET_BNB_COIN_TYPE,
+    TESTNET_USDT_COIN_TYPE,
+    TESTNET_XBTC_COIN_TYPE,
+    TESTNET_WBTC_COIN_TYPE,
+    TESTNET_BTC_COIN_TYPE,
+    TESTNET_ETH_COIN_TYPE,
+    TESTNET_DAI_COIN_TYPE,
+    TESTNET_USDC_COIN_TYPE,
+  } from "../constants";
+
 const MINT_TOKEN_MAPS:Map<string,string> = new Map([
-    ['0x985c26f5edba256380648d4ad84b202094a4ade3::usdt::USDT','0xe8d7d9615ebab5a4a76dafaae6272ae0301b2939'],
-    ['0x985c26f5edba256380648d4ad84b202094a4ade3::xbtc::XBTC','0x0712d20475a629e5ef9a13a7c97d36bc406155b6'],
-    ['0xed67ff7ca06c2af6353fcecc69e312a0588dbab1::btc::BTC','0x6c067ce5d8ff85f34a39157c6600d7f2daf8e91c'],
-    ['0xed67ff7ca06c2af6353fcecc69e312a0588dbab1::eth::ETH','0x15d7b751ce55b49bee7970708aa5ff5c9bc74fb1'],
-    ['0xed67ff7ca06c2af6353fcecc69e312a0588dbab1::bnb::BNB','0x42dc81a4fc8528241ad545d53f0e945e34be5a9d'],
+    [TESTNET_USDT_COIN_TYPE, '0xa0f8edf55c14100fef1b4af0c95a18bb804f6d41'],
+    [TESTNET_XBTC_COIN_TYPE, '0xf1686ecfdf97c0c9189b6e655481990e797b0c07'],
+    [TESTNET_BTC_COIN_TYPE, '0x1c89c2ebf0478c8e7bca2df23eb82b4a68dc5eab'],
+    [TESTNET_ETH_COIN_TYPE, '0xf4ff1caff2049d0eb592fab2c0931f41cd1f2832'],
+    [TESTNET_BNB_COIN_TYPE, '0x6ff50f5020538e15d2f6f6431822a0195f21f23a'],
+    [TESTNET_WBTC_COIN_TYPE, '0x3e087933a3208188877823b8668b360395b3516f'],
+    [TESTNET_DAI_COIN_TYPE, '0x6349d86e1a23e7b3e45c9b916361fe9bc5e41c22'],
+    [TESTNET_USDC_COIN_TYPE, '0x8bf4d01104a44bce03ebb1445b75c63f6b3803cd'],
 ]);
 
 export const listPoolCmd = async (
@@ -22,7 +36,7 @@ export const listPoolCmd = async (
         const poolList = await suiAmmSdk.Pool.getPoolList();
         console.log(poolList);
     }
-    program.command('omniswap:list_pools')
+    program.command('suihub:list_pools')
         .description('list all pools')
         .action(listPools)
 }
@@ -59,7 +73,7 @@ export const addLiquidCmd = async (
         const response = getTransactionEffects(executeResponse)
         console.log(`excute status: ${response?.status.status} digest: ${response?.transactionDigest} `)
     };
-    program.command('omniswap:addLiquid')
+    program.command('suihub:addLiquid')
         .description('add liquid')
         .argument('<coin_x_type>')
         .argument('<coin_y_type>')
@@ -98,7 +112,7 @@ export const removeLiquidCmd = async (
         const response = getTransactionEffects(executeResponse)
         console.log(`excute status: ${response?.status.status} digest: ${response?.transactionDigest} `)
     };
-    program.command('omniswap:removeLiquid')
+    program.command('suihub:removeLiquid')
         .description('add liquid')
         .argument('<coin_x_type>')
         .argument('<coin_y_type>')
@@ -134,7 +148,7 @@ export const adminMintTestTokenCmd= async(
         }
         // 3. get sui payment object
     }
-    program.command('omniswap:adminMintTestToken')
+    program.command('suihub:adminMintTestToken')
         .description('admin mint test token')
         .action(adminAddLiquidCmd);
 }
@@ -176,7 +190,7 @@ export const adminAddAllLiquidCmd = async (
         const ethObject = suiAmmSdk.Coin.getCoinBalance(address,ethTokenArg!);
         console.log(`token: ${ethTokenArg} balance: ${(await ethObject).balance}`)
 
-        const btcTokenArg = tokenTypeArgList.find(token=> token.includes('btc::BTC'));
+        const btcTokenArg = tokenTypeArgList.find(token=> token.includes('BTC'));
         const btcObject = suiAmmSdk.Coin.getCoinBalance(address,btcTokenArg!);
         console.log(`token: ${btcTokenArg} balance: ${(await btcObject).balance}`)
 
@@ -196,7 +210,7 @@ export const adminAddAllLiquidCmd = async (
         await excuteAddliquid(btcTokenArg!,usdtTokenArg!,btcList,[(await usdtObject).objects[2].id]);    
 
     };
-    program.command('omniswap:adminAddAllLiquid')
+    program.command('suihub:adminAddAllLiquid')
         .description('admin add liquid')
         .action(addAllLiquid)
 }

@@ -1,14 +1,16 @@
+/* eslint-disable no-undef */
+/* eslint-disable require-yield */
 'use strict';
 
-var sui_js = require('@mysten/sui.js');
-var bcs = require('@mysten/bcs');
-var fs = require('fs');
-var Decimal = require('decimal.js');
-var commander = require('commander');
-var Chaik = require('chalk');
-var figlet = require('figlet');
-var clear = require('clear');
-var crypto = require('crypto');
+var sui_js = import('@mysten/sui.js');
+var bcs = import('@mysten/bcs');
+var fs = import('fs');
+var Decimal = import('decimal.js');
+var commander = import('commander');
+var Chaik = import('chalk');
+var figlet = import('figlet');
+var clear = import('clear');
+var crypto = import('crypto');
 
 function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
 
@@ -337,6 +339,41 @@ class CoinModule {
     }
 }
 
+//import {  Network  } from '@mysten/sui.js';
+class NetworkConfiguration {
+    constructor(name, fullNodeUrl, packageObjectId, globalId, poolsDynamicId, faucetPackageId, faucetObjectId, isMainNet = false) {
+        this.name = name;
+        this.fullNodeUrl = fullNodeUrl;
+        this.packageObjectId = packageObjectId;
+        this.globalId = globalId;
+        this.poolsDynamicId = poolsDynamicId;
+        this.faucetPackageId = faucetPackageId;
+        this.faucetObjectId = faucetObjectId;
+        this.isMainNet = isMainNet;
+    }
+}
+const MAINNET_CONFIG = new NetworkConfiguration('mainnet', 'https://fullnode.mainnet.sui.io:443', '0x1f0d4d3ca884a1a6958fe5ba9dc6d8003d9f7d76', '0x92131c160fa0f1b95190a3a7cbfa32d0149ab00f', '0x19465f7b8008aa1443269808840856a3c8b2c119', "", "");
+const TESTNET_RPC_URL = 'https://fullnode.testnet.sui.io:443';
+const TESTNET_SWAP_PACKAGE_OBJECT_ID = '0x0235d33eb15185af711494de9ab03f9e8da4333a';
+const TESTNET_SWAP_GLOBAL_OBJECT_ID = '0x090124d79389067b98a3249fcd27164c0e8a8fa3';
+const TESTNET_TESTCOIN_PACKAGE_OBJECT_ID = '0xdd3fdee16e84f0e3800c2bb123c63ab7912e8c1f';
+const TESTNET_TESTCOIN_GLOBAL_OBJECT_ID = '0xbe372bd76e86780f78d94ee127c0330cadfb273c';
+const TESTNET_CONFIG = new NetworkConfiguration('testnet', TESTNET_RPC_URL, TESTNET_SWAP_PACKAGE_OBJECT_ID, TESTNET_SWAP_GLOBAL_OBJECT_ID, '', TESTNET_TESTCOIN_PACKAGE_OBJECT_ID, TESTNET_TESTCOIN_GLOBAL_OBJECT_ID);
+const CONFIGS = {
+    mainnet: MAINNET_CONFIG,
+    testnet: TESTNET_CONFIG
+};
+
+const SUI_COIN_TYPE = "0x2::sui::SUI";
+const TESTNET_USDT_COIN_TYPE = `${TESTNET_SWAP_PACKAGE_OBJECT_ID}::coins::USDT`;
+const TESTNET_XBTC_COIN_TYPE = `${TESTNET_SWAP_PACKAGE_OBJECT_ID}::coins::XBTC`;
+const TESTNET_WBTC_COIN_TYPE = `${TESTNET_SWAP_PACKAGE_OBJECT_ID}::coins::WBTC`;
+const TESTNET_BTC_COIN_TYPE = `${TESTNET_SWAP_PACKAGE_OBJECT_ID}::coins::BTC`;
+const TESTNET_ETH_COIN_TYPE = `${TESTNET_SWAP_PACKAGE_OBJECT_ID}::coins::ETH`;
+const TESTNET_BNB_COIN_TYPE = `${TESTNET_SWAP_PACKAGE_OBJECT_ID}::coins::BNB`;
+const TESTNET_DAI_COIN_TYPE = `${TESTNET_SWAP_PACKAGE_OBJECT_ID}::coins::DAI`;
+const TESTNET_USDC_COIN_TYPE = `${TESTNET_SWAP_PACKAGE_OBJECT_ID}::coins::USDC`;
+
 const REQUESTS_MAINNET = [
     {
         "name": "Tether USD",
@@ -403,9 +440,9 @@ const REQUESTS_TESTNET = [
         "logo_url": "https://raw.githubusercontent.com/hippospace/aptos-coin-list/main/icons/USDT.svg",
         "project_url": "",
         "token_type": {
-            "type": "0x985c26f5edba256380648d4ad84b202094a4ade3::usdt::USDT",
-            "account_address": "0x985c26f5edba256380648d4ad84b202094a4ade3",
-            "module_name": "usdt",
+            "type": TESTNET_USDT_COIN_TYPE,
+            "account_address": TESTNET_SWAP_PACKAGE_OBJECT_ID,
+            "module_name": "coins",
             "struct_name": "USDT"
         },
         "extensions": {
@@ -421,9 +458,9 @@ const REQUESTS_TESTNET = [
         "logo_url": "https://coming-website.s3.us-east-2.amazonaws.com/icon_xbtc_30.png",
         "project_url": "https://github.com/OmniBTC/OmniBridge",
         "token_type": {
-            "type": "0x985c26f5edba256380648d4ad84b202094a4ade3::xbtc::XBTC",
-            "account_address": "0x985c26f5edba256380648d4ad84b202094a4ade3",
-            "module_name": "xbtc",
+            "type": TESTNET_XBTC_COIN_TYPE,
+            "account_address": TESTNET_SWAP_PACKAGE_OBJECT_ID,
+            "module_name": "coins",
             "struct_name": "XBTC"
         },
         "extensions": {
@@ -449,7 +486,7 @@ const REQUESTS_TESTNET = [
         }
     },
     {
-        "name": "BTC",
+        "name": "Bitcoin",
         "symbol": "BTC",
         "official_symbol": "BTC",
         "coingecko_id": "",
@@ -457,10 +494,28 @@ const REQUESTS_TESTNET = [
         "logo_url": "https://coming-website.s3.us-east-2.amazonaws.com/icon_xbtc_30.png",
         "project_url": "https://github.com/OmniBTC/OmniBridge",
         "token_type": {
-            "type": "0xed67ff7ca06c2af6353fcecc69e312a0588dbab1::btc::BTC",
-            "account_address": "0xed67ff7ca06c2af6353fcecc69e312a0588dbab1",
-            "module_name": "btc",
+            "type": TESTNET_BTC_COIN_TYPE,
+            "account_address": TESTNET_SWAP_PACKAGE_OBJECT_ID,
+            "module_name": "coins",
             "struct_name": "BTC"
+        },
+        "extensions": {
+            "data": []
+        }
+    },
+    {
+        "name": "Wrap Bitcoin",
+        "symbol": "WBTC",
+        "official_symbol": "WBTC",
+        "coingecko_id": "",
+        "decimals": 8,
+        "logo_url": "https://coming-website.s3.us-east-2.amazonaws.com/icon_xbtc_30.png",
+        "project_url": "https://github.com/OmniBTC/OmniBridge",
+        "token_type": {
+            "type": TESTNET_WBTC_COIN_TYPE,
+            "account_address": TESTNET_SWAP_PACKAGE_OBJECT_ID,
+            "module_name": "coins",
+            "struct_name": "WBTC"
         },
         "extensions": {
             "data": []
@@ -475,9 +530,9 @@ const REQUESTS_TESTNET = [
         "logo_url": "https://raw.githubusercontent.com/hippospace/aptos-coin-list/main/icons/BNB.svg",
         "project_url": "",
         "token_type": {
-            "type": "0xed67ff7ca06c2af6353fcecc69e312a0588dbab1::bnb::BNB",
-            "account_address": "0xed67ff7ca06c2af6353fcecc69e312a0588dbab1",
-            "module_name": "bnb",
+            "type": TESTNET_BNB_COIN_TYPE,
+            "account_address": TESTNET_SWAP_PACKAGE_OBJECT_ID,
+            "module_name": "coins",
             "struct_name": "BNB"
         },
         "extensions": {
@@ -493,10 +548,46 @@ const REQUESTS_TESTNET = [
         "logo_url": "https://raw.githubusercontent.com/hippospace/aptos-coin-list/main/icons/WETH.svg",
         "project_url": "",
         "token_type": {
-            "type": "0xed67ff7ca06c2af6353fcecc69e312a0588dbab1::eth::ETH",
-            "account_address": "0xed67ff7ca06c2af6353fcecc69e312a0588dbab1",
-            "module_name": "eth",
+            "type": TESTNET_ETH_COIN_TYPE,
+            "account_address": TESTNET_SWAP_PACKAGE_OBJECT_ID,
+            "module_name": "coins",
             "struct_name": "ETH"
+        },
+        "extensions": {
+            "data": []
+        }
+    },
+    {
+        "name": "Dai",
+        "symbol": "DAI",
+        "official_symbol": "DAI",
+        "coingecko_id": "dai",
+        "decimals": 8,
+        "logo_url": "https://raw.githubusercontent.com/hippospace/aptos-coin-list/main/icons/DAI.svg",
+        "project_url": "",
+        "token_type": {
+            "type": TESTNET_DAI_COIN_TYPE,
+            "account_address": TESTNET_SWAP_PACKAGE_OBJECT_ID,
+            "module_name": "coins",
+            "struct_name": "DAI"
+        },
+        "extensions": {
+            "data": []
+        }
+    },
+    {
+        "name": "USD Coin",
+        "symbol": "USDC",
+        "official_symbol": "USDC",
+        "coingecko_id": "usd-coin",
+        "decimals": 8,
+        "logo_url": "https://raw.githubusercontent.com/hippospace/aptos-coin-list/main/icons/USDC.svg",
+        "project_url": "",
+        "token_type": {
+            "type": TESTNET_USDC_COIN_TYPE,
+            "account_address": TESTNET_SWAP_PACKAGE_OBJECT_ID,
+            "module_name": "coins",
+            "struct_name": "USDC"
         },
         "extensions": {
             "data": []
@@ -572,26 +663,6 @@ class SDK {
     }
 }
 
-//import {  Network  } from '@mysten/sui.js';
-class NetworkConfiguration {
-    constructor(name, fullNodeUrl, packageObjectId, globalId, poolsDynamicId, faucetPackageId, faucetObjectId, isMainNet = false) {
-        this.name = name;
-        this.fullNodeUrl = fullNodeUrl;
-        this.packageObjectId = packageObjectId;
-        this.globalId = globalId;
-        this.poolsDynamicId = poolsDynamicId;
-        this.faucetPackageId = faucetPackageId;
-        this.faucetObjectId = faucetObjectId;
-        this.isMainNet = isMainNet;
-    }
-}
-const MAINNET_CONFIG = new NetworkConfiguration('mainnet', 'https://fullnode.mainnet.sui.io:443', '0x1f0d4d3ca884a1a6958fe5ba9dc6d8003d9f7d76', '0x92131c160fa0f1b95190a3a7cbfa32d0149ab00f', '0x19465f7b8008aa1443269808840856a3c8b2c119', "", "");
-const TESTNET_CONFIG = new NetworkConfiguration('testnet', 'https://fullnode.testnet.sui.io:443', '0xc648bfe0d87c25e0436d720ba8f296339bdba5c3', '0x254cf7b848688aa86a8eb69677bbe2e4c46ecf50', '0x81c0cfc53769aaaacee87b4dd8e827e7a86afb8c', "0x985c26f5edba256380648d4ad84b202094a4ade3", "0x50ed67cc1d39a574301fa8d71a47419e9b297bab");
-const CONFIGS = {
-    mainnet: MAINNET_CONFIG,
-    testnet: TESTNET_CONFIG
-};
-
 const readConfig = (program) => {
     const { config } = program.opts();
     const keystoreList = fs__namespace.readFileSync(config + "/sui.keystore", { encoding: 'utf-8' });
@@ -615,7 +686,7 @@ const faucetTokenCmd = (program) => __awaiter(void 0, void 0, void 0, function* 
         const response = sui_js.getTransactionEffects(executeResponse);
         console.log(`excute status: ${response === null || response === void 0 ? void 0 : response.status.status} digest: ${response === null || response === void 0 ? void 0 : response.transactionDigest} `);
     });
-    program.command('omniswap:faucet')
+    program.command('suihub:faucet')
         .description('faucet token')
         .argument('<coin_type>')
         .action(facuetTokens);
@@ -625,7 +696,7 @@ let program$1;
 const initProgram = () => {
     program$1 = new commander__default["default"].Command();
     clear__default["default"]();
-    console.log(Chaik__default["default"].red(figlet__default["default"].textSync('Sui-AMM-CLI', { horizontalLayout: 'full' })));
+    console.log(Chaik__default["default"].red(figlet__default["default"].textSync('Suihub-AMM-CLI', { horizontalLayout: 'full' })));
     program$1.requiredOption('-c, --config <path>', 'path to your sui config.yml (generated with "sui client active-address")');
     return program$1;
 };
@@ -634,8 +705,6 @@ function addHexPrefix(hex) {
     return !hex.startsWith('0x') ? '0x' + hex : hex;
 }
 
-const SUI_COIN_TYPE = "0x2::sui::SUI";
-
 const walletCmd = (program) => __awaiter(void 0, void 0, void 0, function* () {
     const wallet = () => __awaiter(void 0, void 0, void 0, function* () {
         const { suiAmmSdk, rawSigner } = readConfig(program);
@@ -643,17 +712,20 @@ const walletCmd = (program) => __awaiter(void 0, void 0, void 0, function* () {
         const suiBalance = yield suiAmmSdk.Coin.getCoinBalance(address, SUI_COIN_TYPE);
         console.log(`address: ${address} sui balance: ${suiBalance.balance}`);
     });
-    program.command('omniswap:wallet')
+    program.command('suihub:wallet')
         .description('print wallet ')
         .action(wallet);
 });
 
 const MINT_TOKEN_MAPS = new Map([
-    ['0x985c26f5edba256380648d4ad84b202094a4ade3::usdt::USDT', '0xe8d7d9615ebab5a4a76dafaae6272ae0301b2939'],
-    ['0x985c26f5edba256380648d4ad84b202094a4ade3::xbtc::XBTC', '0x0712d20475a629e5ef9a13a7c97d36bc406155b6'],
-    ['0xed67ff7ca06c2af6353fcecc69e312a0588dbab1::btc::BTC', '0x6c067ce5d8ff85f34a39157c6600d7f2daf8e91c'],
-    ['0xed67ff7ca06c2af6353fcecc69e312a0588dbab1::eth::ETH', '0x15d7b751ce55b49bee7970708aa5ff5c9bc74fb1'],
-    ['0xed67ff7ca06c2af6353fcecc69e312a0588dbab1::bnb::BNB', '0x42dc81a4fc8528241ad545d53f0e945e34be5a9d'],
+    [TESTNET_USDT_COIN_TYPE, '0xa0f8edf55c14100fef1b4af0c95a18bb804f6d41'],
+    [TESTNET_XBTC_COIN_TYPE, '0xf1686ecfdf97c0c9189b6e655481990e797b0c07'],
+    [TESTNET_BTC_COIN_TYPE, '0x1c89c2ebf0478c8e7bca2df23eb82b4a68dc5eab'],
+    [TESTNET_ETH_COIN_TYPE, '0xf4ff1caff2049d0eb592fab2c0931f41cd1f2832'],
+    [TESTNET_BNB_COIN_TYPE, '0x6ff50f5020538e15d2f6f6431822a0195f21f23a'],
+    [TESTNET_WBTC_COIN_TYPE, '0x3e087933a3208188877823b8668b360395b3516f'],
+    [TESTNET_DAI_COIN_TYPE, '0x6349d86e1a23e7b3e45c9b916361fe9bc5e41c22'],
+    [TESTNET_USDC_COIN_TYPE, '0x8bf4d01104a44bce03ebb1445b75c63f6b3803cd'],
 ]);
 const listPoolCmd = (program) => __awaiter(void 0, void 0, void 0, function* () {
     const listPools = () => __awaiter(void 0, void 0, void 0, function* () {
@@ -661,7 +733,7 @@ const listPoolCmd = (program) => __awaiter(void 0, void 0, void 0, function* () 
         const poolList = yield suiAmmSdk.Pool.getPoolList();
         console.log(poolList);
     });
-    program.command('omniswap:list_pools')
+    program.command('suihub:list_pools')
         .description('list all pools')
         .action(listPools);
 });
@@ -686,7 +758,7 @@ const addLiquidCmd = (program) => __awaiter(void 0, void 0, void 0, function* ()
         const response = sui_js.getTransactionEffects(executeResponse);
         console.log(`excute status: ${response === null || response === void 0 ? void 0 : response.status.status} digest: ${response === null || response === void 0 ? void 0 : response.transactionDigest} `);
     });
-    program.command('omniswap:addLiquid')
+    program.command('suihub:addLiquid')
         .description('add liquid')
         .argument('<coin_x_type>')
         .argument('<coin_y_type>')
@@ -714,7 +786,7 @@ const removeLiquidCmd = (program) => __awaiter(void 0, void 0, void 0, function*
         const response = sui_js.getTransactionEffects(executeResponse);
         console.log(`excute status: ${response === null || response === void 0 ? void 0 : response.status.status} digest: ${response === null || response === void 0 ? void 0 : response.transactionDigest} `);
     });
-    program.command('omniswap:removeLiquid')
+    program.command('suihub:removeLiquid')
         .description('add liquid')
         .argument('<coin_x_type>')
         .argument('<coin_y_type>')
@@ -747,7 +819,7 @@ const adminMintTestTokenCmd = (program) => __awaiter(void 0, void 0, void 0, fun
         }
         // 3. get sui payment object
     });
-    program.command('omniswap:adminMintTestToken')
+    program.command('suihub:adminMintTestToken')
         .description('admin mint test token')
         .action(adminAddLiquidCmd);
 });
@@ -782,7 +854,7 @@ const adminAddAllLiquidCmd = (program) => __awaiter(void 0, void 0, void 0, func
         const ethTokenArg = tokenTypeArgList.find(token => token.includes('ETH'));
         const ethObject = suiAmmSdk.Coin.getCoinBalance(address, ethTokenArg);
         console.log(`token: ${ethTokenArg} balance: ${(yield ethObject).balance}`);
-        const btcTokenArg = tokenTypeArgList.find(token => token.includes('btc::BTC'));
+        const btcTokenArg = tokenTypeArgList.find(token => token.includes('BTC'));
         const btcObject = suiAmmSdk.Coin.getCoinBalance(address, btcTokenArg);
         console.log(`token: ${btcTokenArg} balance: ${(yield btcObject).balance}`);
         // 2. USDT TOKEN
@@ -798,7 +870,7 @@ const adminAddAllLiquidCmd = (program) => __awaiter(void 0, void 0, void 0, func
         yield excuteAddliquid(ethTokenArg, usdtTokenArg, ethList, [(yield usdtObject).objects[1].id]);
         yield excuteAddliquid(btcTokenArg, usdtTokenArg, btcList, [(yield usdtObject).objects[2].id]);
     });
-    program.command('omniswap:adminAddAllLiquid')
+    program.command('suihub:adminAddAllLiquid')
         .description('admin add liquid')
         .action(addAllLiquid);
 });

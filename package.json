@@ -1,6 +1,6 @@
 {
-  "name": "@omnibtc/omniswap-sui-sdk",
-  "version": "0.0.19",
+  "name": "suihub-sdk",
+  "version": "0.0.1",
   "description": "",
   "sideEffects": false,
   "exports": {
@@ -16,7 +16,7 @@
     "src",
     "dist"
   ],
-  "repository": "",
+  "repository": "https://github.com/baoanh1310/suihub-sdk",
   "author": "",
   "license": "MIT",
   "scripts": {

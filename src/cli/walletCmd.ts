@@ -13,7 +13,7 @@ export const walletCmd = async (
         const suiBalance = await suiAmmSdk.Coin.getCoinBalance(address,SUI_COIN_TYPE);
         console.log(`address: ${address} sui balance: ${  suiBalance.balance }`);
     };
-    program.command('omniswap:wallet')
+    program.command('suihub:wallet')
         .description('print wallet ')
         .action(wallet)
 }

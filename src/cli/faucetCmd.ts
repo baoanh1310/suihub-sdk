@@ -14,7 +14,7 @@ export const faucetTokenCmd = async (
         const response = getTransactionEffects(executeResponse)
         console.log(`excute status: ${response?.status.status} digest: ${response?.transactionDigest} `)
     };
-    program.command('omniswap:faucet')
+    program.command('suihub:faucet')
         .description('faucet token')
         .argument('<coin_type>')
         .action(facuetTokens)

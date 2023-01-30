@@ -9,7 +9,7 @@ export const initProgram = () => {
     program = new commander.Command();
     clear();
     console.log(Chaik.red(
-        figlet.textSync('Sui-AMM-CLI', { horizontalLayout: 'full' })
+        figlet.textSync('Suihub-AMM-CLI', { horizontalLayout: 'full' })
     ));
     program.requiredOption(
         '-c, --config <path>', 
