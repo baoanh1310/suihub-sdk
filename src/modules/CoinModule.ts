@@ -74,7 +74,7 @@ export class CoinModule implements IModule {
         const left_coin = coin_x.localeCompare(coin_y) === -1 ? coin_x : coin_y;
         const right_coin = coin_x.localeCompare(coin_y) === 1 ? coin_x : coin_y;
         const {  packageObjectId } = this.sdk.networkOptions;
-        const lpType = `coin::Coin<${packageObjectId}::implements::LP<${left_coin}, ${right_coin}>>`;
+        const lpType = `${packageObjectId}::implements::LP<${left_coin}, ${right_coin}>`;
         return this.getCoinBalance(address, lpType);
     }
 
