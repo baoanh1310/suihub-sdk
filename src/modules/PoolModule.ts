@@ -144,10 +144,10 @@ export class PoolModule implements IModule {
           globalId,
           params.coin_x_objectIds,
           params.coin_x_amount, 
-          parseInt(params.coin_x_amount) * params.slippage, 
+          (parseInt(params.coin_x_amount) * params.slippage).toString(), 
           params.coin_y_objectIds,
           params.coin_y_amount,
-          parseInt(params.coin_y_amount) * params.slippage
+          (parseInt(params.coin_y_amount) * params.slippage).toString()
         ],
        typeArguments: [params.coin_x,params.coin_y],
        gasBudget: 20000,
