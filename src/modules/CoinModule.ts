@@ -66,6 +66,18 @@ export class CoinModule implements IModule {
         }
     }
 
+    getLpBalance(
+        address:string,
+        coin_x: string, 
+        coin_y: string
+    ) {
+        const left_coin = coin_x.localeCompare(coin_y) === -1 ? coin_x : coin_y;
+        const right_coin = coin_x.localeCompare(coin_y) === 1 ? coin_x : coin_y;
+        const {  packageObjectId,faucetPackageId } = this.sdk.networkOptions;
+        const lpType = `coin::Coin<${packageObjectId}::implements::LP<${faucetPackageId}::coins::${left_coin}, ${faucetPackageId}::coins::${right_coin}>>`;
+        return this.getCoinBalance(address, lpType);
+    }
+
     async buildFaucetTokenTransaction(coinTypeArg: string) {
         const faucetPackageId = this.sdk.networkOptions.faucetPackageId;
         const faucetObjectId = this.sdk.networkOptions.faucetObjectId;
