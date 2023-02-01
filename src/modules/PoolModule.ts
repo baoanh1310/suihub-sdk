@@ -29,7 +29,7 @@ export type CreateRemoveLiquidWithLpValueTXPayloadParams = {
   coin_x: string;
   coin_y: string;
   lp_coin_objectIds: string[],
-  lp_val: number;
+  lp_val: string;
   gasPaymentObjectId: string;
 }
 
