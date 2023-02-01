@@ -43,11 +43,11 @@ export const TESTNET_CONFIG = new NetworkConfiguration(
 );
 
 export const DEVNET_RPC_URL = 'https://fullnode.devnet.sui.io:443';
-export const DEVNET_SWAP_PACKAGE_OBJECT_ID = '0xb46514b7065b4fc58599f3d72824569d11ea4e6f';
-export const DEVNET_SWAP_GLOBAL_OBJECT_ID = '0x94e77579219bd1032038ef7e4744273e1b144680';
-export const DEVNET_TESTCOIN_PACKAGE_OBJECT_ID = '0xe110e6047d70a4c8b5a59d50ddfab29f609fa99d';
-export const DEVNET_TESTCOIN_GLOBAL_OBJECT_ID = '0xb6e64590da5815c83e3c7cda68cd36d4f1bbcd5a';
-export const DEVNET_POOLS_DYNAMIC_ID = '0x75e8e1042ac5530731b683135a3d40111d15151c';
+export const DEVNET_SWAP_PACKAGE_OBJECT_ID = '0xbe88a59dd8ed5319bc5a2c4daf8b987f012eb51a';
+export const DEVNET_SWAP_GLOBAL_OBJECT_ID = '0x8205fc28f811845f59999a4dd1af2368e2356b81';
+export const DEVNET_TESTCOIN_PACKAGE_OBJECT_ID = '0xd4bcb7b182e15a3d69afde818e5fee495ada9dad';
+export const DEVNET_TESTCOIN_GLOBAL_OBJECT_ID = '0x9c3cfc0ce8c91a6de4aea05954d79ce1ed727898';
+export const DEVNET_POOLS_DYNAMIC_ID = '0x2df36282b94630496da7c7685b631d6b3426af8d';
 
 export const DEVNET_CONFIGS = new NetworkConfiguration(
   'devnet',
