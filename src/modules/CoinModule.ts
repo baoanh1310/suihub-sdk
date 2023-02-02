@@ -66,7 +66,7 @@ export class CoinModule implements IModule {
         }
     }
 
-    getLpBalance(
+    async getLpBalance(
         address:string,
         coin_x: string, 
         coin_y: string
@@ -75,7 +75,8 @@ export class CoinModule implements IModule {
         const right_coin = coin_x.localeCompare(coin_y) === 1 ? coin_x : coin_y;
         const {  packageObjectId } = this.sdk.networkOptions;
         const lpType = `${packageObjectId}::implements::LP<${left_coin}, ${right_coin}>`;
-        return this.getCoinBalance(address, lpType);
+        const lpBalance = await this.getCoinBalance(address, lpType);
+        return lpBalance;
     }
 
     getMinCoinsRequired(
