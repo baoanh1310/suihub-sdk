@@ -78,6 +78,27 @@ export class CoinModule implements IModule {
         return this.getCoinBalance(address, lpType);
     }
 
+    getMinCoinsRequired(
+        coins: CoinInfo[],
+        balance: number
+    ) {
+        const sortFn = (a: CoinInfo, b: CoinInfo) => Number(a.balance - b.balance);
+        coins.sort(sortFn);
+        const result: string[] = [];
+        let currentTotalBalance = 0;
+        for (const coin of coins) {
+            result.push(coin.id);
+            currentTotalBalance += Number(coin.balance);
+            if (currentTotalBalance > balance) {
+                break;
+            }
+        }
+        if (currentTotalBalance < balance) {
+            return [];
+        }
+        return result;
+    }
+
     async buildFaucetTokenTransaction(coinTypeArg: string) {
         const faucetPackageId = this.sdk.networkOptions.faucetPackageId;
         const faucetObjectId = this.sdk.networkOptions.faucetObjectId;
