@@ -1,7 +1,12 @@
 import {SDK,CONFIGS} from './main'
 //import {d, decimalsMultiplier} from "./utils/number";
-import { TESTNET_USDT_COIN_TYPE, TESTNET_BNB_COIN_TYPE, DEVNET_USDT_COIN_TYPE, DEVNET_BNB_COIN_TYPE} from './constants'
-
+import { 
+    TESTNET_USDT_COIN_TYPE, 
+    TESTNET_BNB_COIN_TYPE, 
+    DEVNET_USDT_COIN_TYPE, 
+    DEVNET_BNB_COIN_TYPE,
+    DEVNET_DAI_COIN_TYPE,
+} from './constants'
 
 describe('Pool Module',()=>{
     const sdk = new SDK(CONFIGS.testnet);
@@ -80,3 +85,13 @@ describe('Swap Module Devnet',()=>{
         expect(1).toBe(1)
     })
 })
+
+describe('LP balnce Devnet', () => {
+    const sdk = new SDK(CONFIGS.devnet);
+    const address = '0x37a1a8b0850cdf198a080055493fa9389b71f39b';
+    test('get lp balance', async () => {
+        const lp = await sdk.Coin.getLpBalance(address, DEVNET_USDT_COIN_TYPE, DEVNET_DAI_COIN_TYPE);
+        console.log(`lp balance: ${lp.balance}`)
+        console.log(lp.objects);
+    })
+});

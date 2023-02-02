@@ -73,8 +73,24 @@ export class CoinModule implements IModule {
     ) {
         const left_coin = coin_x.localeCompare(coin_y) === -1 ? coin_x : coin_y;
         const right_coin = coin_x.localeCompare(coin_y) === 1 ? coin_x : coin_y;
-        const {  packageObjectId } = this.sdk.networkOptions;
-        const lpType = `${packageObjectId}::implements::LP<${left_coin}, ${right_coin}>`;
+        const { packageObjectId } = this.sdk.networkOptions;
+
+        // remove leading 0s after 0x: 0x0345... => 0x345...
+        let startIndex = 0;
+        for (let i = 2; i < packageObjectId.length; i++) {
+            if (packageObjectId[i] != '0') {
+                startIndex = i;
+                break;
+            }
+        }
+        let simplifiedPackageObjectId = '0x';
+        for (let i = startIndex; i < packageObjectId.length; i++) {
+            simplifiedPackageObjectId += packageObjectId[i];
+        }
+
+        const lpType = `${simplifiedPackageObjectId}::implements::LP<${left_coin}, ${right_coin}>`;
+        console.log("packageObjectId: ", simplifiedPackageObjectId);
+        console.log("lpType: ", lpType);
         const lpBalance = await this.getCoinBalance(address, lpType);
         return lpBalance;
     }
