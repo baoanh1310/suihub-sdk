@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-empty-function */
-import { MoveCallTransaction } from '@mysten/sui.js';
+import { MoveCallTransaction, SignableTransaction } from '@mysten/sui.js';
 import { IModule } from '../interfaces/IModule'
 import { SDK } from '../sdk';
 import {d} from "../utils/number";
@@ -89,10 +89,10 @@ export class SwapModule implements IModule {
       return amoutOut;
     } 
 
-    buildSwapTransaction(params: CreateSwapTXPayloadParams): MoveCallTransaction{
+    buildSwapTransaction(params: CreateSwapTXPayloadParams): SignableTransaction{
       const {  packageObjectId,globalId } = this.sdk.networkOptions;
  
-      const txn:MoveCallTransaction = {
+      const data:MoveCallTransaction = {
         packageObjectId:packageObjectId,
         module: 'interface',
         function: 'multi_swap',
@@ -100,6 +100,10 @@ export class SwapModule implements IModule {
         typeArguments: [params.coin_x,params.coin_y],
         gasPayment: params.gasPaymentObjectId,
         gasBudget: 10000,
+      }
+      const txn: SignableTransaction = {
+        kind: 'moveCall',
+        data
       }
       return txn;
     } 

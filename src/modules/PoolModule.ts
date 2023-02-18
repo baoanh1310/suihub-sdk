@@ -1,5 +1,10 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { getObjectId, getObjectFields, MoveCallTransaction } from '@mysten/sui.js';
+import { 
+  getObjectId, 
+  getObjectFields,
+  MoveCallTransaction,
+  SignableTransaction
+} from '@mysten/sui.js';
 import { IModule } from '../interfaces/IModule'
 import { SDK } from '../sdk';
 import { Pool,PoolInfo } from '../types';
@@ -157,10 +162,10 @@ export class PoolModule implements IModule {
     return amoutOut;
   } 
 
-  buildAddLiquidTransAction(params: CreateAddLiquidTXPayloadParams): MoveCallTransaction{
+  buildAddLiquidTransAction(params: CreateAddLiquidTXPayloadParams): SignableTransaction{
      const {  packageObjectId,globalId } = this.sdk.networkOptions;
 
-     const txn:MoveCallTransaction = {
+     const data: MoveCallTransaction = {
        packageObjectId:packageObjectId,
        module: 'interface',
        function: 'multi_add_liquidity',
@@ -176,13 +181,17 @@ export class PoolModule implements IModule {
        typeArguments: [params.coin_x,params.coin_y],
        gasBudget: 20000,
      }
+     const txn: SignableTransaction = {
+      kind: 'moveCall',
+      data
+     }
      return txn;
   } 
   
-  buildRemoveLiquidTransAction(params: CreateRemoveLiquidTXPayloadParams): MoveCallTransaction{
+  buildRemoveLiquidTransAction(params: CreateRemoveLiquidTXPayloadParams): SignableTransaction{
     const { packageObjectId,globalId } = this.sdk.networkOptions;
 
-    const txn:MoveCallTransaction = {
+    const data:MoveCallTransaction = {
       packageObjectId:packageObjectId,
       module: 'interface',
       function: 'multi_remove_liquidity',
@@ -191,13 +200,17 @@ export class PoolModule implements IModule {
       gasPayment: params.gasPaymentObjectId,
       gasBudget: 10000,
     }
+    const txn: SignableTransaction = {
+      kind: 'moveCall',
+      data
+    }
     return txn;
   } 
 
-  buildRemoveLiquidWithLpValTransAction(params: CreateRemoveLiquidWithLpValueTXPayloadParams): MoveCallTransaction{
+  buildRemoveLiquidWithLpValTransAction(params: CreateRemoveLiquidWithLpValueTXPayloadParams): SignableTransaction{
     const { packageObjectId,globalId } = this.sdk.networkOptions;
 
-    const txn: MoveCallTransaction = {
+    const data: MoveCallTransaction = {
       packageObjectId: packageObjectId,
       module: 'interface',
       function: 'multi_remove_liquidity_with_value',
@@ -205,6 +218,10 @@ export class PoolModule implements IModule {
       typeArguments: [params.coin_x, params.coin_y],
       gasPayment: params.gasPaymentObjectId,
       gasBudget: 10000,
+    }
+    const txn: SignableTransaction = {
+      kind: 'moveCall',
+      data
     }
     return txn;
   } 

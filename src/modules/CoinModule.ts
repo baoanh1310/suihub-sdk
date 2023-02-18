@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { getObjectId, Coin,MoveCallTransaction,SplitCoinTransaction,MergeCoinTransaction } from '@mysten/sui.js';
+import { getObjectId, Coin, MoveCallTransaction, SplitCoinTransaction, MergeCoinTransaction, SignableTransaction } from '@mysten/sui.js';
 import { IModule } from '../interfaces/IModule'
 import { SDK } from '../sdk';
 
@@ -142,7 +142,7 @@ export class CoinModule implements IModule {
     // only admin
     async buildAdminMintTestTokensTransaction(createAdminMintPayloadParams: CreateAdminMintPayloadParams) {
         const faucetPackageId = this.sdk.networkOptions.faucetPackageId;
-        const txn:MoveCallTransaction = {
+        const data:MoveCallTransaction = {
             packageObjectId: faucetPackageId,
             module: 'lock',
             function: 'mint_and_transfer',
@@ -153,9 +153,13 @@ export class CoinModule implements IModule {
             typeArguments: [createAdminMintPayloadParams.coinTypeArg],
             gasBudget: createAdminMintPayloadParams.gasBudget ? createAdminMintPayloadParams.gasBudget : 10000,
         }
+        const txn: SignableTransaction = {
+            kind: 'moveCall',
+            data
+        }
         return txn;
     }
-
+    /*
     async buildSpiltTransaction(signerAddress: string, splitTxn:SplitCoinTransaction) {
         const serializer = await this._sdk.serializer.newSplitCoin(
             signerAddress,
@@ -171,5 +175,6 @@ export class CoinModule implements IModule {
         );
         return serializer.getData();
     }
+    */
  }
  
