@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { getObjectId, Coin,MoveCallTransaction,SplitCoinTransaction,MergeCoinTransaction } from '@mysten/sui.js';
 import { IModule } from '../interfaces/IModule'
 import { SDK } from '../sdk';
@@ -42,13 +43,14 @@ export class CoinModule implements IModule {
             if (!Coin.isCoin(object)) {
                 return;
             }
-            if (coinTypeArg != Coin.getCoinTypeArg(object)) {
+            const coinTypeArgWithoutLeadZeros = this.removeLeadingZeros(coinTypeArg);
+            if (coinTypeArgWithoutLeadZeros != Coin.getCoinTypeArg(object)) {
                 return;
             }
             const coinObjectId = getObjectId(object);
             const balance = Coin.getBalance(object)
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            const coinSymbol = Coin.getCoinSymbol(coinTypeArg!);
+            const coinSymbol = Coin.getCoinSymbol(coinTypeArgWithoutLeadZeros!);
             
             balanceObjects.push({
                 id: coinObjectId,
@@ -66,31 +68,38 @@ export class CoinModule implements IModule {
         }
     }
 
-    async getLpBalance(
-        address:string,
-        coin_x: string, 
-        coin_y: string
-    ) {
-        const left_coin = coin_x.localeCompare(coin_y) === -1 ? coin_x : coin_y;
-        const right_coin = coin_x.localeCompare(coin_y) === 1 ? coin_x : coin_y;
-        const { packageObjectId } = this.sdk.networkOptions;
-
+    removeLeadingZeros(address: string) {
         // remove leading 0s after 0x: 0x0345... => 0x345...
         let startIndex = 0;
-        for (let i = 2; i < packageObjectId.length; i++) {
-            if (packageObjectId[i] != '0') {
+        for (let i = 2; i < address.length; i++) {
+            if (address[i] != '0') {
                 startIndex = i;
                 break;
             }
         }
         let simplifiedPackageObjectId = '0x';
-        for (let i = startIndex; i < packageObjectId.length; i++) {
-            simplifiedPackageObjectId += packageObjectId[i];
+        for (let i = startIndex; i < address.length; i++) {
+            simplifiedPackageObjectId += address[i];
         }
+        return simplifiedPackageObjectId;
+    }
+
+    async getLpBalance(
+        address:string,
+        coin_x: string, 
+        coin_y: string
+    ) {
+        const coin_x_name = coin_x.split("::").pop()!;
+        const coin_y_name = coin_y.split("::").pop()!;
+        let left_coin = coin_x_name.localeCompare(coin_y_name) === -1 ? coin_x : coin_y;
+        left_coin = this.removeLeadingZeros(left_coin);
+        let right_coin = coin_x_name.localeCompare(coin_y_name) === 1 ? coin_x : coin_y;
+        right_coin = this.removeLeadingZeros(right_coin);
+        const { packageObjectId } = this.sdk.networkOptions;
+
+        const simplifiedPackageObjectId = this.removeLeadingZeros(packageObjectId);
 
         const lpType = `${simplifiedPackageObjectId}::implements::LP<${left_coin}, ${right_coin}>`;
-        console.log("packageObjectId: ", simplifiedPackageObjectId);
-        console.log("lpType: ", lpType);
         const lpBalance = await this.getCoinBalance(address, lpType);
         return lpBalance;
     }

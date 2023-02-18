@@ -6,8 +6,10 @@ import {
     DEVNET_USDT_COIN_TYPE, 
     DEVNET_BNB_COIN_TYPE,
     DEVNET_DAI_COIN_TYPE,
+    DEVNET_USDC_COIN_TYPE,
+    DEVNET_ETH_COIN_TYPE,
 } from './constants'
-
+/*
 describe('Pool Module',()=>{
     const sdk = new SDK(CONFIGS.testnet);
     test('get pool',async()=>{
@@ -46,12 +48,12 @@ describe('Swap Module',()=>{
         expect(1).toBe(1)
     })
 })
-
+*/
 describe('Pool Module Devnet',()=>{
     const sdk = new SDK(CONFIGS.devnet);
     test('get pool',async()=>{
         const poolList = await sdk.Pool.getPoolList();
-        console.log(poolList);
+        console.log("Number pool: ", poolList.length);
         const poolDetail = await sdk.Pool.getPoolInfo(DEVNET_BNB_COIN_TYPE,DEVNET_USDT_COIN_TYPE);
         console.log(poolDetail);
         expect(1).toBe(1)
@@ -62,9 +64,9 @@ describe('Token Module Devnet',()=>{
     const sdk = new SDK(CONFIGS.devnet);
     const address = '0x37a1a8b0850cdf198a080055493fa9389b71f39b';
     test('get token balance',async()=>{
-        const bnb = await sdk.Coin.getCoinBalance(address,DEVNET_BNB_COIN_TYPE);
-        console.log(`bnb balance: ${bnb.balance}`)
-        console.log(bnb.objects);
+        const token = await sdk.Coin.getCoinBalance(address,DEVNET_BNB_COIN_TYPE);
+        console.log(`token balance: ${token.balance}`)
+        console.log(token.objects);
         console.log('----------------------------------------------------');
         const usdt = await sdk.Coin.getCoinBalance(address,DEVNET_USDT_COIN_TYPE);
         console.log(`usdt balance: ${usdt.balance}`)
@@ -86,11 +88,11 @@ describe('Swap Module Devnet',()=>{
     })
 })
 
-describe('LP balnce Devnet', () => {
+describe('LP balance Devnet', () => {
     const sdk = new SDK(CONFIGS.devnet);
     const address = '0x37a1a8b0850cdf198a080055493fa9389b71f39b';
     test('get lp balance', async () => {
-        const lp = await sdk.Coin.getLpBalance(address, DEVNET_USDT_COIN_TYPE, DEVNET_DAI_COIN_TYPE);
+        const lp = await sdk.Coin.getLpBalance(address, DEVNET_USDT_COIN_TYPE, DEVNET_ETH_COIN_TYPE);
         console.log(`lp balance: ${lp.balance}`)
         console.log(lp.objects);
     })

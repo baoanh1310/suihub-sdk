@@ -45,17 +45,31 @@ export class PoolModule implements IModule {
      this._sdk = sdk;
    }
 
+   removeLeadingZeros(address: string) {
+      // remove leading 0s after 0x: 0x0345... => 0x345...
+      let startIndex = 0;
+      for (let i = 2; i < address.length; i++) {
+          if (address[i] != '0') {
+              startIndex = i;
+              break;
+          }
+      }
+      let simplifiedPackageObjectId = '0x';
+      for (let i = startIndex; i < address.length; i++) {
+          simplifiedPackageObjectId += address[i];
+      }
+      return simplifiedPackageObjectId;
+  }
+
    // eslint-disable-next-line @typescript-eslint/no-empty-function
    async getPoolList():Promise<Pool[]>{  
       const { poolsDynamicId } = this.sdk.networkOptions;
-      const poolsObjects = await this._sdk.jsonRpcProvider.getObjectsOwnedByObject(
-        poolsDynamicId
-      );
+      const poolsObjects = await (await this._sdk.jsonRpcProvider.getDynamicFields(this.removeLeadingZeros(poolsDynamicId))).data;
       const pools:Pool[] = [];
       poolsObjects.forEach(pool=> {
         pools.push({
           pool_addr: pool['objectId'],
-          pool_type: pool['type'],
+          pool_type: pool['objectType'],
         })
       })
       return Promise.resolve(pools)
@@ -69,13 +83,15 @@ export class PoolModule implements IModule {
         if (!this.sdk.CoinList.getCoinInfoByType(coinXType) || !this.sdk.CoinList.getCoinInfoByType(coinYType)) {
           Promise.reject('Coin Not In Offical Coin List')
         }
+        coinXType = this.removeLeadingZeros(coinXType);
+        coinYType = this.removeLeadingZeros(coinYType);
 
         const pool:Pool | undefined = poolList.find(pool => {
             return pool.pool_type.includes(coinXType) && pool.pool_type.includes(coinYType);
         })
 
         if(!pool) {
-          Promise.reject();
+          return Promise.reject();
         }
         
         const moveObject = await this._sdk.jsonRpcProvider.getObject(pool!.pool_addr);
@@ -83,7 +99,7 @@ export class PoolModule implements IModule {
         const id = getObjectId(moveObject);
         const fields = getObjectFields(moveObject)!['value']!['fields'];
         if (!fields) {
-          Promise.reject();
+          return Promise.reject();
         }
         const lpSupply = fields?.['lp_supply'];
         const poolInfo: PoolInfo = {
