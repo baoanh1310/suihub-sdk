@@ -147,10 +147,13 @@ export class PoolModule implements IModule {
     }
     const pool = await this.sdk.Pool.getPoolInfo(coin_x, coin_y);
     const coin_x_reserve = pool.coin_x;
-    const coin_y_reserce = pool.coin_y;
+    const coin_y_reserve = pool.coin_y;
 
-    const [reserveX, reserveY] = 
-      interactiveToken === 'from' ? [coin_x_reserve,coin_y_reserce] : [coin_y_reserce,coin_x_reserve];
+    // const [reserveX, reserveY] = interactiveToken === 'from' ? [coin_x_reserve,coin_y_reserce] : [coin_y_reserce,coin_x_reserve];
+    const coin_x_name = coin_x.split("::").pop()!;
+    const coin_y_name = coin_y.split("::").pop()!;
+    const [reserveX, reserveY] = coin_x_name.localeCompare(coin_y_name) === -1 ? [coin_x_reserve, coin_y_reserve] : [coin_y_reserve, coin_x_reserve];
+
 
     const coin_x_in = d(coin_in_value);
 
