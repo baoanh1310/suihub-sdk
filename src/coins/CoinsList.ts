@@ -376,7 +376,7 @@ export const REQUESTS_DEVNET: RawCoinInfo[] = [
     "symbol": "ETH",
     "official_symbol": "ETH",
     "coingecko_id": "eth",
-    "decimals": 6,
+    "decimals": 8,
     "logo_url": "https://raw.githubusercontent.com/hippospace/aptos-coin-list/main/icons/WETH.svg",
     "project_url": "",
     "token_type": {
