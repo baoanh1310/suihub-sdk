@@ -94,14 +94,41 @@ export class SwapModule implements IModule {
     buildSwapTransaction(params: CreateSwapTXPayloadParams): MoveCallTransaction{
       const {  packageObjectId,globalId } = this.sdk.networkOptions;
  
-      const txn:MoveCallTransaction = {
-        packageObjectId:packageObjectId,
-        module: 'interface',
-        function: 'multi_swap',
-        arguments: [globalId,params.coins_in_objectIds,params.coins_in_value,params.coins_out_min],
-        typeArguments: [params.coin_x,params.coin_y],
-        gasPayment: params.gasPaymentObjectId,
-        gasBudget: 10000,
+      // const txn:MoveCallTransaction = {
+      //   packageObjectId:packageObjectId,
+      //   module: 'interface',
+      //   function: 'multi_swap',
+      //   arguments: [globalId,params.coins_in_objectIds,params.coins_in_value,params.coins_out_min],
+      //   typeArguments: [params.coin_x,params.coin_y],
+      //   gasPayment: params.gasPaymentObjectId,
+      //   gasBudget: 10000,
+      // }
+      const txn: MoveCallTransaction = {
+        target: `${packageObjectId}::interface::multi_swap`,
+        kind: "MoveCall",
+        arguments: [
+          {
+            kind: "Input",
+            index: 0,
+            value: globalId
+          },
+          {
+            kind: "Input",
+            index: 1,
+            value: params.coins_in_objectIds
+          },
+          {
+            kind: "Input",
+            index: 2,
+            value: params.coins_in_value
+          },
+          {
+            kind: "Input",
+            index: 3,
+            value: params.coins_out_min
+          }
+        ],
+        typeArguments: [params.coin_x, params.coin_y],
       }
       return txn;
     } 

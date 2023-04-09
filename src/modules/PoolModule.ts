@@ -68,14 +68,15 @@ export class PoolModule implements IModule {
    // eslint-disable-next-line @typescript-eslint/no-empty-function
    async getPoolList():Promise<Pool[]>{  
       const { poolsDynamicId } = this.sdk.networkOptions;
-      const poolsObjects = await (await this._sdk.jsonRpcProvider.getDynamicFields(this.removeLeadingZeros(poolsDynamicId))).data;
+      
+      // const poolsObjects = await (await this._sdk.jsonRpcProvider.getDynamicFields({ parentId: this.removeLeadingZeros(poolsDynamicId) })).data;
       const pools:Pool[] = [];
-      poolsObjects.forEach(pool=> {
-        pools.push({
-          pool_addr: pool['objectId'],
-          pool_type: pool['objectType'],
-        })
-      })
+      // poolsObjects.forEach(pool=> {
+      //   pools.push({
+      //     pool_addr: pool['objectId'],
+      //     pool_type: pool['objectType'],
+      //   })
+      // })
       return Promise.resolve(pools)
    }
 
@@ -98,7 +99,7 @@ export class PoolModule implements IModule {
           return Promise.reject();
         }
         
-        const moveObject = await this._sdk.jsonRpcProvider.getObject(pool!.pool_addr);
+        const moveObject = await this._sdk.jsonRpcProvider.getObject({ id: pool!.pool_addr });
 
         const id = getObjectId(moveObject);
         const fields = getObjectFields(moveObject)!['value']!['fields'];
@@ -164,24 +165,69 @@ export class PoolModule implements IModule {
     return amoutOut;
   } 
 
-  buildAddLiquidTransAction(params: CreateAddLiquidTXPayloadParams): MoveCallTransaction{
+  buildAddLiquidTransAction(params: CreateAddLiquidTXPayloadParams) {
      const {  packageObjectId,globalId } = this.sdk.networkOptions;
 
+     /*
+     (property) arguments: ({
+        kind: "Input";
+        index: number;
+        type?: "object" | "pure" | undefined;
+        value?: any;
+    })[]
+     */
+
      const txn:MoveCallTransaction = {
-       packageObjectId:packageObjectId,
-       module: 'interface',
-       function: 'multi_add_liquidity',
+       target: `${packageObjectId}::interface::multi_add_liquidity`,
+       kind: "MoveCall",
        arguments: [
-          globalId,
-          params.coin_x_objectIds,
-          params.coin_x_amount, 
-          (parseInt(params.coin_x_amount) * params.slippage).toString(), 
-          params.coin_y_objectIds,
-          params.coin_y_amount,
-          (parseInt(params.coin_y_amount) * params.slippage).toString()
-        ],
+        {
+          kind: "Input",
+          index: 0,
+          value: globalId
+        },
+        {
+          kind: "Input",
+          index: 1,
+          value: params.coin_x_objectIds,
+        },
+        {
+          kind: "Input",
+          index: 2,
+          value: params.coin_x_amount,
+        },
+        {
+          kind: "Input",
+          index: 3,
+          value: (parseInt(params.coin_x_amount) * params.slippage).toString(), 
+        },
+        {
+          kind: "Input",
+          index: 4,
+          value: params.coin_y_objectIds,
+        },
+        {
+          kind: "Input",
+          index: 5,
+          value: params.coin_y_amount,
+        },
+        {
+          kind: "Input",
+          index: 6,
+          value: (parseInt(params.coin_y_amount) * params.slippage).toString()
+        }
+       ],
+      //  arguments: [
+      //     globalId,
+      //     params.coin_x_objectIds,
+      //     params.coin_x_amount, 
+      //     (parseInt(params.coin_x_amount) * params.slippage).toString(), 
+      //     params.coin_y_objectIds,
+      //     params.coin_y_amount,
+      //     (parseInt(params.coin_y_amount) * params.slippage).toString()
+      //   ],
        typeArguments: [params.coin_x,params.coin_y],
-       gasBudget: 20000,
+      //  gasBudget: 20000,
      }
      return txn;
   } 
@@ -189,14 +235,31 @@ export class PoolModule implements IModule {
   buildRemoveLiquidTransAction(params: CreateRemoveLiquidTXPayloadParams): MoveCallTransaction{
     const { packageObjectId,globalId } = this.sdk.networkOptions;
 
-    const txn:MoveCallTransaction = {
-      packageObjectId:packageObjectId,
-      module: 'interface',
-      function: 'multi_remove_liquidity',
-      arguments: [globalId,params.lp_coin_objectIds],
+    // const txn:MoveCallTransaction = {
+    //   packageObjectId:packageObjectId,
+    //   module: 'interface',
+    //   function: 'multi_remove_liquidity',
+    //   arguments: [globalId,params.lp_coin_objectIds],
+    //   typeArguments: [params.coin_x,params.coin_y],
+    //   gasPayment: params.gasPaymentObjectId,
+    //   gasBudget: 10000,
+    // }
+    const txn: MoveCallTransaction = {
+      target: `${packageObjectId}::interface::multi_remove_liquidity`,
+      kind: "MoveCall",
+      arguments: [
+        {
+          kind: "Input",
+          index: 0,
+          value: globalId
+        },
+        {
+          kind: "Input",
+          index: 1,
+          value: params.lp_coin_objectIds
+        }
+      ],
       typeArguments: [params.coin_x,params.coin_y],
-      gasPayment: params.gasPaymentObjectId,
-      gasBudget: 10000,
     }
     return txn;
   } 
@@ -204,14 +267,36 @@ export class PoolModule implements IModule {
   buildRemoveLiquidWithLpValTransAction(params: CreateRemoveLiquidWithLpValueTXPayloadParams): MoveCallTransaction{
     const { packageObjectId,globalId } = this.sdk.networkOptions;
 
+    // const txn: MoveCallTransaction = {
+    //   packageObjectId: packageObjectId,
+    //   module: 'interface',
+    //   function: 'multi_remove_liquidity_with_value',
+    //   arguments: [ globalId, params.lp_coin_objectIds, params.lp_val ],
+    //   typeArguments: [params.coin_x, params.coin_y],
+    //   gasPayment: params.gasPaymentObjectId,
+    //   gasBudget: 10000,
+    // }
     const txn: MoveCallTransaction = {
-      packageObjectId: packageObjectId,
-      module: 'interface',
-      function: 'multi_remove_liquidity_with_value',
-      arguments: [ globalId, params.lp_coin_objectIds, params.lp_val ],
-      typeArguments: [params.coin_x, params.coin_y],
-      gasPayment: params.gasPaymentObjectId,
-      gasBudget: 10000,
+      target: `${packageObjectId}::interface::multi_remove_liquidity_with_value`,
+      kind: "MoveCall",
+      arguments: [
+        {
+          kind: "Input",
+          index: 0,
+          value: globalId
+        },
+        {
+          kind: "Input",
+          index: 1,
+          value: params.lp_coin_objectIds
+        },
+        {
+          kind: "Input",
+          index: 2,
+          value: params.lp_val
+        }
+      ],
+      typeArguments: [params.coin_x,params.coin_y],
     }
     return txn;
   } 

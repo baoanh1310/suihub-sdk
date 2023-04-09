@@ -631,9 +631,8 @@ class CoinListModule {
 class SDK {
     constructor(networkConfiguration) {
         this._jsonRpcProvider = new sui_js.JsonRpcProvider(networkConfiguration.fullNodeUrl);
-        this._serializer = new sui_js.RpcTxnDataSerializer(this._jsonRpcProvider.endpoints.fullNode, 
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        this._jsonRpcProvider.options.skipDataValidation);
+        // this._serializer = new sui_js.RpcTxnDataSerializer(this._jsonRpcProvider.endpoints.fullNode, 
+        // this._jsonRpcProvider.options.skipDataValidation);
         this._networkConfiguration = networkConfiguration;
         this._swap = new SwapModule(this);
         this._token = new CoinModule(this);
@@ -658,9 +657,9 @@ class SDK {
     get networkOptions() {
         return this._networkConfiguration;
     }
-    get serializer() {
-        return this._serializer;
-    }
+    // get serializer() {
+    //     return this._serializer;
+    // }
 }
 
 const readConfig = (program) => {

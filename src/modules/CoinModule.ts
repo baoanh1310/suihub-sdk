@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { getObjectId, Coin, MoveCallTransaction } from '@mysten/sui.js';
+import { getObjectId, Coin, MoveCallTransaction, TransactionBlock } from '@mysten/sui.js';
 import { IModule } from '../interfaces/IModule'
 import { SDK } from '../sdk';
 
@@ -37,18 +37,18 @@ export class CoinModule implements IModule {
 
     // coinTypeArg: "0x2::sui::SUI"
     async getCoinBalance(address:string,coinTypeArg:string) {
-        const coinMoveObjects = await this._sdk.jsonRpcProvider.getCoinBalancesOwnedByAddress(address);
+        const coinMoveObjects = await (await this._sdk.jsonRpcProvider.getAllCoins({owner: address})).data;
         const balanceObjects: CoinInfo[] = [];
         coinMoveObjects.forEach(object => {
-            if (!Coin.isCoin(object)) {
+            if (!object.coinType) {
                 return;
             }
             const coinTypeArgWithoutLeadZeros = this.removeLeadingZeros(coinTypeArg);
-            if (coinTypeArgWithoutLeadZeros != Coin.getCoinTypeArg(object)) {
+            if (coinTypeArgWithoutLeadZeros != object.coinType) {
                 return;
             }
-            const coinObjectId = getObjectId(object);
-            const balance = Coin.getBalance(object)
+            const coinObjectId = object.coinObjectId;
+            const balance = BigInt(object.balance);
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             const coinSymbol = Coin.getCoinSymbol(coinTypeArgWithoutLeadZeros!);
             
@@ -128,18 +128,32 @@ export class CoinModule implements IModule {
     async buildFaucetTokenTransaction(coinTypeArg: string) {
         const faucetPackageId = this.sdk.networkOptions.faucetPackageId;
         const faucetObjectId = this.sdk.networkOptions.faucetObjectId;
+        /* 
+        const tx = new TransactionBlock();
+        const txn = {
+            target: `${faucetPackageId}::faucet::claim`,
+            arguments: [tx.pure(faucetObjectId)],
+        }
+        */
+        
         const txn:MoveCallTransaction = {
-            packageObjectId: faucetPackageId,
-            module: 'faucet',
-            function: 'claim',
-            arguments: [faucetObjectId],
+            target: `${faucetPackageId}::faucet::claim`,
+            kind: "MoveCall",
+            arguments: [
+                {
+                    kind: "Input",
+                    index: 0,
+                    value: faucetObjectId
+                },
+            ],
             typeArguments: [coinTypeArg],
-            gasBudget: 10000,
+            // gasBudget: 10000,
         }
         return txn;
     }
     
     // only admin
+    /*
     async buildAdminMintTestTokensTransaction(createAdminMintPayloadParams: CreateAdminMintPayloadParams) {
         const faucetPackageId = this.sdk.networkOptions.faucetPackageId;
         const txn:MoveCallTransaction = {
@@ -155,7 +169,7 @@ export class CoinModule implements IModule {
         }
         return txn;
     }
-    /*
+    
     async buildSpiltTransaction(signerAddress: string, splitTxn:SplitCoinTransaction) {
         const serializer = await this._sdk.serializer.newSplitCoin(
             signerAddress,

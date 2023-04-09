@@ -9,7 +9,7 @@ export class NetworkConfiguration {
     public poolsDynamicId: string,
     public faucetPackageId:string,
     public faucetObjectId:string,
-    public chainId = 0,
+    public chainId = 1,
   ) {}
 }
 
@@ -25,11 +25,11 @@ export const MAINNET_CONFIG = new NetworkConfiguration(
 );
 
 export const TESTNET_RPC_URL = 'https://fullnode.testnet.sui.io:443';
-export const TESTNET_SWAP_PACKAGE_OBJECT_ID = '0x0235d33eb15185af711494de9ab03f9e8da4333a';
-export const TESTNET_SWAP_GLOBAL_OBJECT_ID = '0x090124d79389067b98a3249fcd27164c0e8a8fa3';
-export const TESTNET_TESTCOIN_PACKAGE_OBJECT_ID = '0xdd3fdee16e84f0e3800c2bb123c63ab7912e8c1f';
-export const TESTNET_TESTCOIN_GLOBAL_OBJECT_ID = '0xbe372bd76e86780f78d94ee127c0330cadfb273c';
-export const TESTNET_POOLS_DYNAMIC_ID = '0xeae3d57fca67bb68a9bfcac7af1f36ab964ad69a';
+export const TESTNET_SWAP_PACKAGE_OBJECT_ID = '0x45596ee426f29225bf23e44b6719c931eb740932fad8c29b90eca9cf2006beec';
+export const TESTNET_SWAP_GLOBAL_OBJECT_ID = '0x8cf8a17b288ddc434e17e8d6b82149c860f5576c73b89af4d2ff0dcff604d2c9';
+export const TESTNET_TESTCOIN_PACKAGE_OBJECT_ID = '0xa7644965795a18b508a2ee42657a8cab344161f975c1b4f72762278e77eec6ce';
+export const TESTNET_TESTCOIN_GLOBAL_OBJECT_ID = '0x67363093f04e65ddf869a2bcf4cae42ee167c49566750471b0466cac019a1662';
+export const TESTNET_POOLS_DYNAMIC_ID = '0xe0154382732e78f6058ec2e9d837927e51b82f3b23d6354a811807cb63180fa0';
 
 export const TESTNET_CONFIG = new NetworkConfiguration(
   'testnet',
