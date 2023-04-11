@@ -14,7 +14,7 @@ describe('Pool Module',()=>{
     const sdk = new SDK(CONFIGS.testnet);
     test('get pool',async()=>{
         const poolList = await sdk.Pool.getPoolList();
-        console.log(poolList);
+        console.log("Number pool: ", poolList.length);
         const poolDetail = await sdk.Pool.getPoolInfo(TESTNET_BNB_COIN_TYPE,TESTNET_USDT_COIN_TYPE);
         console.log(poolDetail);
         expect(1).toBe(1)
@@ -36,7 +36,6 @@ describe('Token Module',()=>{
     })
 })
 
-/*
 describe('Swap Module',()=>{
     const sdk = new SDK(CONFIGS.testnet);
 
@@ -46,17 +45,6 @@ describe('Swap Module',()=>{
         console.log('----------------------------------------------------');
         const toRate = await sdk.Swap.calculateRate('to',TESTNET_BNB_COIN_TYPE,TESTNET_USDT_COIN_TYPE,Math.pow(10,6));
         console.log(`to rate: ${toRate}`);
-        expect(1).toBe(1)
-    })
-})
-
-describe('Pool Module Testnet',()=>{
-    const sdk = new SDK(CONFIGS.testnet);
-    test('get pool',async()=>{
-        const poolList = await sdk.Pool.getPoolList();
-        console.log("Number pool: ", poolList.length);
-        const poolDetail = await sdk.Pool.getPoolInfo(TESTNET_BNB_COIN_TYPE,TESTNET_USDT_COIN_TYPE);
-        console.log(poolDetail);
         expect(1).toBe(1)
     })
 })
@@ -76,19 +64,6 @@ describe('Token Module Testnet',()=>{
     })
 })
 
-describe('Swap Module Testnet',()=>{
-    const sdk = new SDK(CONFIGS.testnet);
-
-    test('calculate rate',async()=>{
-        const fromRate = await sdk.Swap.calculateRate('from',TESTNET_BNB_COIN_TYPE,TESTNET_USDT_COIN_TYPE,1);
-        console.log(`from rate: ${fromRate}`);
-        console.log('----------------------------------------------------');
-        const toRate = await sdk.Swap.calculateRate('to',TESTNET_BNB_COIN_TYPE,TESTNET_USDT_COIN_TYPE,Math.pow(10,6));
-        console.log(`to rate: ${toRate}`);
-        expect(1).toBe(1)
-    })
-})
-
 describe('LP balance Testnet', () => {
     const sdk = new SDK(CONFIGS.testnet);
     const address = ADDRESS;
@@ -98,4 +73,3 @@ describe('LP balance Testnet', () => {
         console.log(lp.objects);
     })
 });
-*/

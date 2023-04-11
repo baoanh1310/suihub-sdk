@@ -3,6 +3,7 @@ import {
   getObjectId, 
   getObjectFields,
   MoveCallTransaction,
+  getObjectType,
 } from '@mysten/sui.js';
 import { IModule } from '../interfaces/IModule'
 import { SDK } from '../sdk';
@@ -69,14 +70,14 @@ export class PoolModule implements IModule {
    async getPoolList():Promise<Pool[]>{  
       const { poolsDynamicId } = this.sdk.networkOptions;
       
-      // const poolsObjects = await (await this._sdk.jsonRpcProvider.getDynamicFields({ parentId: this.removeLeadingZeros(poolsDynamicId) })).data;
+      const poolsObjects = await (await this._sdk.jsonRpcProvider.getDynamicFields({ parentId: this.removeLeadingZeros(poolsDynamicId) })).data;
       const pools:Pool[] = [];
-      // poolsObjects.forEach(pool=> {
-      //   pools.push({
-      //     pool_addr: pool['objectId'],
-      //     pool_type: pool['objectType'],
-      //   })
-      // })
+      poolsObjects.forEach(pool=> {
+        pools.push({
+          pool_addr: pool['objectId'],
+          pool_type: pool['objectType'],
+        })
+      })
       return Promise.resolve(pools)
    }
 
@@ -99,7 +100,19 @@ export class PoolModule implements IModule {
           return Promise.reject();
         }
         
-        const moveObject = await this._sdk.jsonRpcProvider.getObject({ id: pool!.pool_addr });
+        const moveObject = await this._sdk.jsonRpcProvider.getObject(
+          { 
+            id: pool!.pool_addr, 
+            options: {
+              showContent: true,
+              showDisplay: true,
+              showType: true
+            } 
+          }
+        );
+        if (!moveObject.data) {
+          return Promise.reject();
+        }
 
         const id = getObjectId(moveObject);
         const fields = getObjectFields(moveObject)!['value']!['fields'];
