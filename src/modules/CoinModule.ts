@@ -35,8 +35,15 @@ export class CoinModule implements IModule {
       this._sdk = sdk;
     }
 
+    async getObjectsList(address: string) {
+        const objects = await this._sdk.jsonRpcProvider.getOwnedObjects({ owner: address });
+        console.log("Owned objects: ", objects);
+        return objects;
+    }
+
     // coinTypeArg: "0x2::sui::SUI"
     async getCoinBalance(address:string,coinTypeArg:string) {
+        console.log("Coin type: ", coinTypeArg);
         const coinMoveObjects = await (await this._sdk.jsonRpcProvider.getAllCoins({owner: address})).data;
         const balanceObjects: CoinInfo[] = [];
         coinMoveObjects.forEach(object => {
