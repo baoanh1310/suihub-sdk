@@ -110,7 +110,8 @@ export class SwapModule implements IModule {
           {
             kind: "Input",
             index: 0,
-            value: globalId
+            value: globalId,
+            type: "pure"
           },
           {
             kind: "Input",

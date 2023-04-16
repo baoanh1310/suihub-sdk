@@ -150,7 +150,8 @@ export class CoinModule implements IModule {
                 {
                     kind: "Input",
                     index: 0,
-                    value: faucetObjectId
+                    value: faucetObjectId,
+                    type: "pure"
                 },
             ],
             typeArguments: [coinTypeArg],
