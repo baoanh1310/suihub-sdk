@@ -196,37 +196,37 @@ export class PoolModule implements IModule {
        arguments: [
         {
           kind: "Input",
-          index: 0,
+          index: 1,
           value: globalId
         },
         {
           kind: "Input",
-          index: 1,
+          index: 2,
           value: params.coin_x_objectIds,
         },
         {
           kind: "Input",
-          index: 2,
+          index: 3,
           value: params.coin_x_amount,
         },
         {
           kind: "Input",
-          index: 3,
+          index: 4,
           value: (parseInt(params.coin_x_amount) * params.slippage).toString(), 
         },
         {
           kind: "Input",
-          index: 4,
+          index: 5,
           value: params.coin_y_objectIds,
         },
         {
           kind: "Input",
-          index: 5,
+          index: 6,
           value: params.coin_y_amount,
         },
         {
           kind: "Input",
-          index: 6,
+          index: 7,
           value: (parseInt(params.coin_y_amount) * params.slippage).toString()
         }
        ],
@@ -263,12 +263,12 @@ export class PoolModule implements IModule {
       arguments: [
         {
           kind: "Input",
-          index: 0,
+          index: 1,
           value: globalId
         },
         {
           kind: "Input",
-          index: 1,
+          index: 2,
           value: params.lp_coin_objectIds
         }
       ],
@@ -295,17 +295,17 @@ export class PoolModule implements IModule {
       arguments: [
         {
           kind: "Input",
-          index: 0,
+          index: 1,
           value: globalId
         },
         {
           kind: "Input",
-          index: 1,
+          index: 2,
           value: params.lp_coin_objectIds
         },
         {
           kind: "Input",
-          index: 2,
+          index: 3,
           value: params.lp_val
         }
       ],

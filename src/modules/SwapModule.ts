@@ -109,23 +109,22 @@ export class SwapModule implements IModule {
         arguments: [
           {
             kind: "Input",
-            index: 0,
-            value: globalId,
-            type: "pure"
-          },
-          {
-            kind: "Input",
             index: 1,
-            value: params.coins_in_objectIds
+            value: globalId,
           },
           {
             kind: "Input",
             index: 2,
-            value: params.coins_in_value
+            value: params.coins_in_objectIds
           },
           {
             kind: "Input",
             index: 3,
+            value: params.coins_in_value
+          },
+          {
+            kind: "Input",
+            index: 4,
             value: params.coins_out_min
           }
         ],
