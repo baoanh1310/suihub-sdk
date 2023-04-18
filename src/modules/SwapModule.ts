@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-empty-function */
-import { MoveCallTransaction } from '@mysten/sui.js';
+import { MoveCallTransaction, TransactionBlock } from '@mysten/sui.js';
 import { IModule } from '../interfaces/IModule'
 import { SDK } from '../sdk';
 import {d} from "../utils/number";
@@ -91,46 +91,21 @@ export class SwapModule implements IModule {
       return amoutOut;
     } 
 
-    buildSwapTransaction(params: CreateSwapTXPayloadParams): MoveCallTransaction{
+    buildSwapTransaction(params: CreateSwapTXPayloadParams){
       const {  packageObjectId,globalId } = this.sdk.networkOptions;
  
-      // const txn:MoveCallTransaction = {
-      //   packageObjectId:packageObjectId,
-      //   module: 'interface',
-      //   function: 'multi_swap',
-      //   arguments: [globalId,params.coins_in_objectIds,params.coins_in_value,params.coins_out_min],
-      //   typeArguments: [params.coin_x,params.coin_y],
-      //   gasPayment: params.gasPaymentObjectId,
-      //   gasBudget: 10000,
-      // }
-      const txn: MoveCallTransaction = {
+      const tx = new TransactionBlock();
+      tx.moveCall({
         target: `${packageObjectId}::interface::multi_swap`,
-        kind: "MoveCall",
         arguments: [
-          {
-            kind: "Input",
-            index: 1,
-            value: globalId,
-          },
-          {
-            kind: "Input",
-            index: 2,
-            value: params.coins_in_objectIds
-          },
-          {
-            kind: "Input",
-            index: 3,
-            value: params.coins_in_value
-          },
-          {
-            kind: "Input",
-            index: 4,
-            value: params.coins_out_min
-          }
+          tx.pure(globalId),
+          tx.pure(params.coins_in_objectIds),
+          tx.pure(params.coins_in_value),
+          tx.pure(params.coins_out_min)
         ],
         typeArguments: [params.coin_x, params.coin_y],
-      }
-      return txn;
+      })
+      return tx;
     } 
  }
  

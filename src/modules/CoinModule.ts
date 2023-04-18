@@ -132,30 +132,18 @@ export class CoinModule implements IModule {
         return result;
     }
 
-    async buildFaucetTokenTransaction(coinTypeArg: string) {
+    buildFaucetTokenTransaction(coinTypeArg: string) {
         const faucetPackageId = this.sdk.networkOptions.faucetPackageId;
         const faucetObjectId = this.sdk.networkOptions.faucetObjectId;
-        /* 
-        const tx = new TransactionBlock();
-        const txn = {
-            target: `${faucetPackageId}::faucet::claim`,
-            arguments: [tx.pure(faucetObjectId)],
-        }
-        */
         
+        const tx = new TransactionBlock();
         const txn:MoveCallTransaction = {
             target: `${faucetPackageId}::faucet::claim`,
             kind: "MoveCall",
             arguments: [
-                {
-                    kind: "Input",
-                    index: 1,
-                    value: faucetObjectId,
-                    type: "pure"
-                },
+                tx.pure(faucetObjectId),
             ],
             typeArguments: [coinTypeArg],
-            // gasBudget: 10000,
         }
         return txn;
     }

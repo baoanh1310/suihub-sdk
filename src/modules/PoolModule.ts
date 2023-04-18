@@ -4,6 +4,7 @@ import {
   getObjectFields,
   MoveCallTransaction,
   getObjectType,
+  TransactionBlock,
 } from '@mysten/sui.js';
 import { IModule } from '../interfaces/IModule'
 import { SDK } from '../sdk';
@@ -179,138 +180,55 @@ export class PoolModule implements IModule {
   } 
 
   buildAddLiquidTransAction(params: CreateAddLiquidTXPayloadParams) {
-     const {  packageObjectId,globalId } = this.sdk.networkOptions;
+    const {  packageObjectId,globalId } = this.sdk.networkOptions;
 
-     /*
-     (property) arguments: ({
-        kind: "Input";
-        index: number;
-        type?: "object" | "pure" | undefined;
-        value?: any;
-    })[]
-     */
+    const tx = new TransactionBlock();
+    tx.moveCall({
+      target: `${packageObjectId}::interface::multi_add_liquidity`,
+      arguments: [
+        tx.pure(globalId),
+        tx.pure(params.coin_x_objectIds),
+        tx.pure(params.coin_x_amount),
+        tx.pure((parseInt(params.coin_x_amount) * params.slippage).toString()),
+        tx.pure(params.coin_y_objectIds),
+        tx.pure(params.coin_y_amount),
+        tx.pure((parseInt(params.coin_y_amount) * params.slippage).toString())
+      ],
+      typeArguments: [params.coin_x, params.coin_y],
+    })
 
-     const txn:MoveCallTransaction = {
-       target: `${packageObjectId}::interface::multi_add_liquidity`,
-       kind: "MoveCall",
-       arguments: [
-        {
-          kind: "Input",
-          index: 1,
-          value: globalId
-        },
-        {
-          kind: "Input",
-          index: 2,
-          value: params.coin_x_objectIds,
-        },
-        {
-          kind: "Input",
-          index: 3,
-          value: params.coin_x_amount,
-        },
-        {
-          kind: "Input",
-          index: 4,
-          value: (parseInt(params.coin_x_amount) * params.slippage).toString(), 
-        },
-        {
-          kind: "Input",
-          index: 5,
-          value: params.coin_y_objectIds,
-        },
-        {
-          kind: "Input",
-          index: 6,
-          value: params.coin_y_amount,
-        },
-        {
-          kind: "Input",
-          index: 7,
-          value: (parseInt(params.coin_y_amount) * params.slippage).toString()
-        }
-       ],
-      //  arguments: [
-      //     globalId,
-      //     params.coin_x_objectIds,
-      //     params.coin_x_amount, 
-      //     (parseInt(params.coin_x_amount) * params.slippage).toString(), 
-      //     params.coin_y_objectIds,
-      //     params.coin_y_amount,
-      //     (parseInt(params.coin_y_amount) * params.slippage).toString()
-      //   ],
-       typeArguments: [params.coin_x,params.coin_y],
-      //  gasBudget: 20000,
-     }
-     return txn;
+    return tx;
   } 
   
-  buildRemoveLiquidTransAction(params: CreateRemoveLiquidTXPayloadParams): MoveCallTransaction{
+  buildRemoveLiquidTransAction(params: CreateRemoveLiquidTXPayloadParams){
     const { packageObjectId,globalId } = this.sdk.networkOptions;
 
-    // const txn:MoveCallTransaction = {
-    //   packageObjectId:packageObjectId,
-    //   module: 'interface',
-    //   function: 'multi_remove_liquidity',
-    //   arguments: [globalId,params.lp_coin_objectIds],
-    //   typeArguments: [params.coin_x,params.coin_y],
-    //   gasPayment: params.gasPaymentObjectId,
-    //   gasBudget: 10000,
-    // }
-    const txn: MoveCallTransaction = {
+    const tx = new TransactionBlock();
+    tx.moveCall({
       target: `${packageObjectId}::interface::multi_remove_liquidity`,
-      kind: "MoveCall",
       arguments: [
-        {
-          kind: "Input",
-          index: 1,
-          value: globalId
-        },
-        {
-          kind: "Input",
-          index: 2,
-          value: params.lp_coin_objectIds
-        }
+        tx.pure(globalId),
+        tx.pure(params.lp_coin_objectIds)
       ],
-      typeArguments: [params.coin_x,params.coin_y],
-    }
-    return txn;
+      typeArguments: [params.coin_x, params.coin_y]
+    })
+
+    return tx;
   } 
 
-  buildRemoveLiquidWithLpValTransAction(params: CreateRemoveLiquidWithLpValueTXPayloadParams): MoveCallTransaction{
+  buildRemoveLiquidWithLpValTransAction(params: CreateRemoveLiquidWithLpValueTXPayloadParams){
     const { packageObjectId,globalId } = this.sdk.networkOptions;
 
-    // const txn: MoveCallTransaction = {
-    //   packageObjectId: packageObjectId,
-    //   module: 'interface',
-    //   function: 'multi_remove_liquidity_with_value',
-    //   arguments: [ globalId, params.lp_coin_objectIds, params.lp_val ],
-    //   typeArguments: [params.coin_x, params.coin_y],
-    //   gasPayment: params.gasPaymentObjectId,
-    //   gasBudget: 10000,
-    // }
-    const txn: MoveCallTransaction = {
-      target: `${packageObjectId}::interface::multi_remove_liquidity_with_value`,
-      kind: "MoveCall",
+    const tx = new TransactionBlock();
+    tx.moveCall({
+      target: `${packageObjectId}::interface::multi_remove_liquidity`,
       arguments: [
-        {
-          kind: "Input",
-          index: 1,
-          value: globalId
-        },
-        {
-          kind: "Input",
-          index: 2,
-          value: params.lp_coin_objectIds
-        },
-        {
-          kind: "Input",
-          index: 3,
-          value: params.lp_val
-        }
+        tx.pure(globalId),
+        tx.pure(params.lp_coin_objectIds),
+        tx.pure(params.lp_val)
       ],
-      typeArguments: [params.coin_x,params.coin_y],
-    }
-    return txn;
+      typeArguments: [params.coin_x, params.coin_y]
+    })
+    return tx;
   } 
 }
