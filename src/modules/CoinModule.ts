@@ -137,15 +137,14 @@ export class CoinModule implements IModule {
         const faucetObjectId = this.sdk.networkOptions.faucetObjectId;
         
         const tx = new TransactionBlock();
-        const txn:MoveCallTransaction = {
+        tx.moveCall({
             target: `${faucetPackageId}::faucet::claim`,
-            kind: "MoveCall",
             arguments: [
-                tx.pure(faucetObjectId),
+                tx.object(faucetObjectId),
             ],
             typeArguments: [coinTypeArg],
-        }
-        return txn;
+        })
+        return tx;
     }
     
     // only admin
